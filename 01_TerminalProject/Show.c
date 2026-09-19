@@ -1,33 +1,90 @@
 #include <curses.h>
 #include <locale.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 #define DX 7
 #define DY 3
 
+void show_help()
+{
+  printf("Usage: Show [file]\n");
+}
+
+#define WINDOW_LINES (LINES - 2 * DY - 2)
+#define WINDOW_COLS (COLS - 2 * DX - 2)
+WINDOW *recreate_window()
+{
+  WINDOW *win = newwin(WINDOW_LINES, WINDOW_COLS, DY + 1, DX + 1);
+  keypad(win, TRUE);
+  scrollok(win, TRUE);
+  return win;
+}
+
 int main(int argc, char* argv[])
 {
-  WINDOW *frame, *win;
-  int c = 0;
+  if (argc != 2)
+  {
+    show_help();
+    return 1;
+  }
+
+  if (strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0)
+  {
+    show_help();
+    return 0;
+  }
+
+  FILE *file = fopen(argv[1], "r");
+  if (file == NULL)
+  {
+    fprintf(stderr, "Error: Could not open file %s\n", argv[1]);
+    return 1;
+  }
 
   setlocale(LC_ALL, "");
   initscr();
   noecho();
   cbreak();
-  printw("Окно:");
   refresh();
 
-  frame = newwin(LINES - 2 * DY, COLS - 2 * DX, DY, DX);
-  box(frame, 0, 0);
-  mvwaddstr(frame, 0, (int)((COLS - 2 * DX - 5) / 2), "Рамка");
-  wrefresh(frame);
+  WINDOW *frame;
+  {
+    frame = newwin(LINES - 2 * DY, COLS - 2 * DX, DY, DX);
+    box(frame, 0, 0);
+    const char *lastSlash = strrchr(argv[1], '/');
+    const char *filename = lastSlash ? lastSlash + 1 : argv[1];
+    mvwaddstr(frame, 0, 1, filename);
+    wrefresh(frame);
+  }
 
-  win = newwin(LINES - 2 * DY - 2, COLS - 2 * DX - 2, DY + 1, DX + 1);
-  keypad(win, TRUE);
-  scrollok(win, TRUE);
-  while ((c = wgetch(win)) != 27)
-    wprintw(win, "\n%d: %s", c, keyname(c));
+  WINDOW *win = recreate_window();
+  {
+    int c = 0;
+    char *line = NULL;
+    // size_t total = 0;
+    do
+    {
+      for (int i = 0; i < WINDOW_LINES - 1; i++)
+      {
+        ssize_t nread = 0;
+        size_t read = 0;
+        nread =  getline(&line, &read, file);
+        if (nread == -1)
+        {
+          break;
+        }
+        wprintw(win, "%s", line);
+      }
+    } while ((c = wgetch(win)) != 27);
+    free(line);
+  }
+
   delwin(win);
   delwin(frame);
   endwin();
+  fclose(file);
+
   return 0;
 }
