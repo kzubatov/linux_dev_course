@@ -65,6 +65,7 @@ int main(int argc, char* argv[])
   {
     int c = 0;
     char *line = NULL;
+    size_t read = 0;
     // size_t total = 0;
     int linesToRead = WINDOW_LINES;
     int lineNo = 0;
@@ -101,7 +102,6 @@ int main(int argc, char* argv[])
         lineNo++;
         linesToRead--;
         ssize_t nread = 0;
-        size_t read = 0;
         nread =  getline(&line, &read, file);
         if (nread == -1)
         {
