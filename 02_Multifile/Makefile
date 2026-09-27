@@ -10,6 +10,8 @@ all:    README prog
 prog:   const.o fun.o prog.o
 :       cc $^ -o $@
 
+fun.o:  outlib.h
+
 README: prog
 :       ./$< 2> $@
 
