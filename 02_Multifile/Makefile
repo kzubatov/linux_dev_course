@@ -5,7 +5,7 @@ CFLAGS=-fPIC
 ECHO_FAILED=echo -e "\033[31mFAILED\033[0m"
 ECHO_PASSED=echo -e "\033[32mPASSED\033[0m"
 
-all:    prog prog-a prog-so clean distclean test
+all:    clean prog prog-a prog-so test
 
 prog:   const.o fun.o prog.o
 
@@ -25,17 +25,15 @@ fun.o:  outlib.h
 
 clean:
 :       rm -f $(TRASH)
-
-distclean:      clean
 :       rm -rf $(GENERATES)
 
 test: test_empty test_one_arg test_three_args
 
 test_empty: prog prog-a prog-so
 :       @echo -n "Running empty test "
-:       @./prog 2> $@_prog
-:       @./prog-a 2> $@_prog_a
-:       @LD_LIBRARY_PATH=. ./prog-so 2> $@_prog_so
+:       @./prog > $@_prog 2>&1 || true
+:       @./prog-a > $@_prog_a 2>&1 || true
+:       @LD_LIBRARY_PATH=. ./prog-so > $@_prog_so 2>&1 || true
 :       @cmp $@_prog $@_prog_a && cmp $@_prog $@_prog_so && $(ECHO_PASSED) || $(ECHO_FAILED)
 
 test_one_arg: prog prog-a prog-so
