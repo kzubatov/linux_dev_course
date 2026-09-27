@@ -1,11 +1,11 @@
 .RECIPEPREFIX=:
-GENERATES = prog prog-a prog-so README test* liboutput*
+GENERATES = prog prog-a prog-so test* liboutput*
 TRASH = *.o *~ o.*
 CFLAGS=-fPIC
 ECHO_FAILED=echo -e "\033[31mFAILED\033[0m"
 ECHO_PASSED=echo -e "\033[32mPASSED\033[0m"
 
-all:    README prog prog-a prog-so clean distclean test
+all:    prog prog-a prog-so clean distclean test
 
 prog:   const.o fun.o prog.o
 
@@ -20,9 +20,6 @@ liboutput_static.a: fun.o const.o
 
 liboutput.so: fun.o const.o
 :       cc -shared $^ -o $@
-
-README: prog
-:       ./$< 2> $@
 
 fun.o:  outlib.h
 
