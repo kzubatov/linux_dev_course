@@ -1,6 +1,6 @@
 CC=gcc
 .RECIPEPREFIX=:
-BUILDROOT ?= /usr
+DESTDIR ?= /usr
 BIN ?= bin
 
 .PHONY: clean install
@@ -12,5 +12,5 @@ clean:
 :		rm -f *~ *.o Show
 
 install: Show
-:               install -D Show $(BUILDROOT)/$(BIN)/Show
+:               install -D Show $(DESTDIR)/$(BIN)/Show
 

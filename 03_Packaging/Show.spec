@@ -20,7 +20,7 @@ Used for LecturesCMC/LinuxApplicationDevelopment2026/03_Packaging.
 make %name
 
 %install
-make BUILDRROOT=%buildroot BIN=%_bindir install
+make DESTDIR=%buildroot BIN=%_bindir install
 
 %files
 %_bindir/*
