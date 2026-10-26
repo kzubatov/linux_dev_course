@@ -1,4 +1,5 @@
 CC=gcc
+CFLAGS=-O0 -g -Wall -Wextra -Werror
 .RECIPEPREFIX=:
 DESTDIR ?= /usr
 BIN ?= bin
