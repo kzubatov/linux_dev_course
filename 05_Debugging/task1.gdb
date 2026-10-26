@@ -2,6 +2,7 @@ set pagination off
 
 b 43 if i % 5 == 0
   commands
+    echo @@@
     printf "%d %d %d %d\n", start, end, step, i
     continue
   end
