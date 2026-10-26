@@ -13,19 +13,19 @@ void help()
 
 int main(int argc, char* argv[])
 {
-  int start = 0, end, step = 1;
+  int start = 0, stop, step = 1;
   switch (argc)
   {
   case 2:
-    end = atoi(argv[1]);
+    stop = atoi(argv[1]);
     break;
   case 3:
     start = atoi(argv[1]);
-    end = atoi(argv[2]);
+    stop = atoi(argv[2]);
     break;
   case 4:
     start = atoi(argv[1]);
-    end = atoi(argv[2]);
+    stop = atoi(argv[2]);
     step = atoi(argv[3]);
     break;
   default:
@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
     return 1;
   }
 
-  for (int i = start; (step > 0) ? i < end : i > end; i += step)
+  for (int i = start; (step > 0) ? i < stop : i > stop; i += step)
     printf("%d\n", i);
 
   return 0;

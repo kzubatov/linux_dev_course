@@ -5,7 +5,7 @@ b 43
 commands
   set $s=$s+1
   if $s >= 28 && $s <= 35
-    printf "@@@%d %d %d %d\n", start, end, step, i
+    printf "@@@%d %d %d %d\n", start, stop, step, i
   end
   continue
 end
